@@ -126,6 +126,10 @@ The **quality-checks** skill (`.github/skills/quality-checks/SKILL.md`) wraps th
 - Diagnosing test failures (port conflicts, stale servers, flaky tests, CI divergence)
 - Validating readiness before commits, pushes, or merges
 
+### Playwright MCP server
+
+The workspace MCP configuration includes Microsoft's Playwright MCP server as `microsoft-playwright-mcp`. It can be used for browser-based validation with `npx -y @playwright/mcp@latest`.
+
 ### GitHub Copilot App Run Menu
 
 The [GitHub Copilot app](https://github.com/github/github-app) reads
