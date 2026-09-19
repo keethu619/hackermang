@@ -20,6 +20,13 @@ Refer to technology-specific instruction files:
 
 ## Core Principles
 
+### Comments and Documentation
+
+- Comment why a component or interaction exists, including accessibility or UX decisions that are not apparent from the markup.
+- Do not use comments to paraphrase HTML, Astro expressions, Tailwind classes, or TypeScript. Prefer clear names and structure.
+- Keep comments current; update or delete a comment whenever the related behavior changes.
+- Reusable `.astro` components must document their `Props` interface so their public contract is clear to callers.
+
 ### Testability
 
 - Every interactive element MUST include a `data-testid` attribute
@@ -49,7 +56,13 @@ Refer to technology-specific instruction files:
 - Create reusable components for common UI patterns
 - Keep components focused on a single responsibility
 - Use props for configuration, not duplication
-- Document component APIs with TypeScript types
+- Document component APIs with a TSDoc comment on the `Props` interface and use explicit TypeScript types
+
+### TypeScript Formatting
+
+- Use consistent indentation, semicolons, single quotes, trailing commas in multiline structures, and avoid unnecessary type assertions.
+- Keep formatting consistent with the existing codebase; ESLint enforces the repository's TypeScript quality and formatting baseline.
+- Run `npm run lint` through the `quality-checks` skill before submitting frontend changes.
 
 ## Development Workflow
 
