@@ -133,4 +133,51 @@ test.describe('Game Listing and Navigation', () => {
       await expect(page.getByTestId('not-found-home-link')).toBeVisible();
     });
   });
+
+  test.describe('Game filters', () => {
+    test.beforeEach(async ({ page }) => {
+      await page.goto('/');
+      await expect(page.getByTestId('games-grid')).toBeVisible();
+    });
+
+    test('filters by category with accessible controls', async ({ page }) => {
+      const categoryFilter = page.locator('[data-category-filter]').first();
+      await expect(categoryFilter).toBeVisible();
+      await expect(categoryFilter).toHaveAttribute('data-testid', /category-filter-/);
+
+      const categoryId = await categoryFilter.inputValue();
+      await categoryFilter.check();
+
+      const visibleCards = page.locator('[data-game-card-wrapper]:not([hidden])');
+      await expect(visibleCards).not.toHaveCount(0);
+      await expect(page.getByTestId('filter-results-status')).toContainText('game');
+      await expect(page.locator(`[data-game-card-wrapper][data-category-id="${categoryId}"]:not([hidden])`))
+        .toHaveCount(await visibleCards.count());
+    });
+
+    test('combines category and publisher filters and can reset them', async ({ page }) => {
+      const categoryFilter = page.locator('[data-category-filter]').first();
+      const publisherFilter = page.getByTestId('publisher-filter');
+      const publisherOption = publisherFilter.locator('option').nth(1);
+      const categoryId = await categoryFilter.inputValue();
+      const publisherId = await publisherOption.getAttribute('value');
+
+      await categoryFilter.check();
+      await publisherFilter.selectOption({ index: 1 });
+
+      const visibleCards = page.locator('[data-game-card-wrapper]:not([hidden])');
+      await expect(visibleCards).not.toHaveCount(0);
+      await expect(page.locator(`[data-game-card-wrapper][data-category-id="${categoryId}"]:not([hidden])`))
+        .toHaveCount(await visibleCards.count());
+      await expect(page.locator(`[data-game-card-wrapper][data-publisher-id="${publisherId}"]:not([hidden])`))
+        .toHaveCount(await visibleCards.count());
+
+      await page.getByTestId('reset-filters').click();
+      await expect(page.locator('[data-category-filter]:checked')).toHaveCount(0);
+      await expect(publisherFilter).toHaveValue('');
+      await expect(page.locator('[data-game-card-wrapper]:not([hidden])')).toHaveCount(
+        await page.locator('[data-game-card-wrapper]').count(),
+      );
+    });
+  });
 });
